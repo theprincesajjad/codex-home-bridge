@@ -13,5 +13,7 @@ mkdir -p "$contents_dir/MacOS" "$contents_dir/Resources"
 cp "$project_dir/.build/release/CodexHomeBridge" "$contents_dir/MacOS/CodexHomeBridge"
 cp "$project_dir/Resources/Info.plist" "$contents_dir/Info.plist"
 
+xattr -cr "$app_dir"
 codesign --force --deep --sign - "$app_dir"
+codesign --verify --deep --strict "$app_dir"
 echo "$app_dir"
