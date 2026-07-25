@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleDisplayName</key>
+    <string>Codex Home Bridge</string>
+    <key>CFBundleExecutable</key>
+    <string>CodexHomeBridge</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.sajjadpirani.codexhomebridge</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Codex Home Bridge</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.2.0</string>
+    <key>CFBundleVersion</key>
+    <string>2</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Codex Home Bridge uses your Mac microphone to listen for the “Hey Codex” wake phrase.</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Codex Home Bridge uses your local network to confirm that your enrolled iPhone is present before enabling voice tasks.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Codex Home Bridge transcribes spoken requests so Codex can respond.</string>
+</dict>
+</plist>
