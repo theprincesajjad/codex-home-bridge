@@ -5,21 +5,21 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>Codex Home Bridge</string>
+    <string>Set It Up</string>
     <key>CFBundleExecutable</key>
-    <string>CodexHomeBridge</string>
+    <string>SetItUp</string>
     <key>CFBundleIdentifier</key>
-    <string>com.sajjadpirani.codexhomebridge</string>
+    <string>com.sajjadpirani.setitup</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Codex Home Bridge</string>
+    <string>Set It Up</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.2.0</string>
+    <string>0.4.0</string>
     <key>CFBundleVersion</key>
-    <string>2</string>
+    <string>5</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
     <key>LSUIElement</key>
@@ -27,10 +27,8 @@
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Codex Home Bridge uses your Mac microphone to listen for the “Hey Codex” wake phrase.</string>
-    <key>NSLocalNetworkUsageDescription</key>
-    <string>Codex Home Bridge uses your local network to confirm that your enrolled iPhone is present before enabling voice tasks.</string>
+    <string>Set It Up uses your Mac microphone to listen for the “Set It Up” wake phrase.</string>
     <key>NSSpeechRecognitionUsageDescription</key>
-    <string>Codex Home Bridge transcribes spoken requests so Codex can respond.</string>
+    <string>Set It Up transcribes spoken requests so your selected assistant can respond.</string>
 </dict>
 </plist>

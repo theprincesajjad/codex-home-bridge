@@ -3,24 +3,24 @@
 import PackageDescription
 
 let package = Package(
-    name: "CodexHomeBridge",
+    name: "SetItUp",
     platforms: [
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "CodexHomeBridge", targets: ["CodexHomeBridge"])
+        .executable(name: "SetItUp", targets: ["SetItUp"])
     ],
     targets: [
         .target(
-            name: "CodexHomeBridgeCore"
+            name: "SetItUpCore"
         ),
         .executableTarget(
-            name: "CodexHomeBridge",
-            dependencies: ["CodexHomeBridgeCore"]
+            name: "SetItUp",
+            dependencies: ["SetItUpCore"]
         ),
         .testTarget(
-            name: "CodexHomeBridgeCoreTests",
-            dependencies: ["CodexHomeBridgeCore"]
+            name: "SetItUpCoreTests",
+            dependencies: ["SetItUpCore"]
         )
     ],
     swiftLanguageModes: [.v5]

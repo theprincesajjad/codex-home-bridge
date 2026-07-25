@@ -2,9 +2,9 @@
 set -euo pipefail
 
 project_dir="$(cd "$(dirname "$0")/.." && pwd)"
-source_app="$project_dir/dist/Codex Home Bridge.app"
+source_app="$project_dir/dist/Set It Up.app"
 install_root="$HOME/Applications"
-installed_app="$install_root/Codex Home Bridge.app"
+installed_app="$install_root/Set It Up.app"
 
 if [[ ! -d "$source_app" ]]; then
   "$project_dir/scripts/build-app.sh"

@@ -1,5 +1,5 @@
 import Foundation
-import CodexHomeBridgeCore
+import SetItUpCore
 
 enum CodexRunnerError: LocalizedError {
     case executableNotFound
@@ -46,7 +46,7 @@ struct CodexRunner {
             : FileManager.default.homeDirectoryForCurrentUser.path
 
         let tempDirectory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("codex-home-bridge-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathComponent("set-it-up-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(
             at: tempDirectory,
             withIntermediateDirectories: true

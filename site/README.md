@@ -1,8 +1,7 @@
-# Codex Home Bridge launch site
+# Set It Up launch site
 
-The public product page for Codex Home Bridge. It explains the Mac microphone,
-Codex CLI, HomePod output, and iPhone presence-gate architecture without
-claiming access to a HomePod microphone.
+The public product page for Set It Up. It explains the local AI, OpenAI API, and
+Codex modes; the $50 guided Mac installation; and the install-partner offer.
 
 ## Local development
 

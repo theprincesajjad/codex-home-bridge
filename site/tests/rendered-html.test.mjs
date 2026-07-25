@@ -22,17 +22,19 @@ async function render() {
   );
 }
 
-test("server-renders the Codex Home Bridge launch page", async () => {
+test("server-renders the Set It Up launch page", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>Codex Home Bridge \| Your iPhone is the key<\/title>/i);
-  assert.match(html, /Tell your Mac\. Codex gets it done\./);
-  assert.match(html, /Your iPhone is the key\./);
-  assert.match(html, /Founding setup · \$99/);
-  assert.match(html, /github\.com\/theprincesajjad\/codex-home-bridge/);
+  assert.match(html, /<title>Set It Up \| AI installed and working on your Mac<\/title>/i);
+  assert.match(html, /AI on your Mac\. Set up and working\./);
+  assert.match(html, /Guided install · \$50 CAD/);
+  assert.match(html, /Local AI/);
+  assert.match(html, /OpenAI/);
+  assert.match(html, /Codex/);
+  assert.match(html, /github\.com\/theprincesajjad\/set-it-up-ai/);
   assert.doesNotMatch(html, /codex-preview/);
   assert.doesNotMatch(html, /react-loading-skeleton/);
 });
@@ -45,4 +47,5 @@ test("includes product-specific social metadata", async () => {
   assert.match(html, /\/og\.png/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/i);
   assert.match(html, /MIT licensed/);
+  assert.match(html, /API usage is billed separately by OpenAI/);
 });

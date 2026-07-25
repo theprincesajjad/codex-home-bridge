@@ -20,9 +20,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const metadataBase = new URL(
     host ? `${protocol}://${host}` : "http://localhost:3000",
   );
-  const title = "Codex Home Bridge | Your iPhone is the key";
+  const title = "Set It Up | AI installed and working on your Mac";
   const description =
-    "An unofficial open-source voice bridge for Codex on macOS, with HomePod output and an iPhone presence gate.";
+    "Open-source Mac voice assistant with local AI, OpenAI API, or Codex modes, plus a one-time $50 CAD guided installation.";
 
   return {
     metadataBase,
@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/og.png",
           width: 1200,
           height: 630,
-          alt: "Codex Home Bridge with a Mac, iPhone, and smart speaker",
+          alt: "Set It Up guided AI installation for Mac",
         },
       ],
     },

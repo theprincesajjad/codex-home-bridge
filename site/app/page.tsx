@@ -1,211 +1,247 @@
+const sourceUrl = "https://github.com/theprincesajjad/set-it-up-ai";
+
 export default function Home() {
   return (
     <main>
       <nav className="nav shell" aria-label="Main navigation">
-        <a className="brand" href="#top" aria-label="Codex Home Bridge home">
-          <span className="brand-mark">C</span>
-          <span>CODEX HOME BRIDGE</span>
+        <a className="brand" href="#top" aria-label="Set It Up home">
+          <span className="brand-mark">S</span>
+          <span>SET IT UP</span>
         </a>
         <div className="nav-links">
           <a href="#how">How it works</a>
-          <a href="#security">Phone gate</a>
-          <a
-            href="https://github.com/theprincesajjad/codex-home-bridge"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a href="#modes">Three modes</a>
+          <a href="#partners">For partners</a>
+          <a href={sourceUrl} target="_blank" rel="noreferrer">
             Source
           </a>
         </div>
-        <a className="nav-cta" href="#setup">
-          Get set up
+        <a className="nav-cta" href="#install">
+          Book an install
         </a>
       </nav>
 
       <section className="hero shell" id="top">
         <div className="hero-copy">
-          <p className="eyebrow">UNOFFICIAL · OPEN SOURCE · LOCAL-FIRST</p>
-          <h1>Tell your Mac. Codex gets it done.</h1>
+          <p className="eyebrow">OPEN SOURCE SOFTWARE · GUIDED MAC INSTALL</p>
+          <h1>AI on your Mac. Set up and working.</h1>
           <p className="hero-lede">
-            A practical voice bridge for Codex on macOS. Say “Hey Codex,” let
-            your Mac handle the request, and hear the answer on your HomePod.
-            Your enrolled iPhone keeps the listener locked when you are away.
+            Choose private local AI, your own OpenAI API access, or Codex for
+            bigger computer tasks. We install one path, secure it, and prove it
+            with a live request.
           </p>
           <div className="hero-actions">
+            <a className="button button-primary" href="#install">
+              Guided install · $50 CAD
+            </a>
             <a
-              className="button button-primary"
-              href="https://github.com/theprincesajjad/codex-home-bridge"
+              className="button button-secondary"
+              href={sourceUrl}
               target="_blank"
               rel="noreferrer"
             >
               View the source
               <span aria-hidden="true">↗</span>
             </a>
-            <a className="button button-secondary" href="#setup">
-              Founding setup · $99
-            </a>
           </div>
           <ul className="signal-list" aria-label="Product facts">
             <li>MIT licensed</li>
             <li>macOS 14+</li>
-            <li>No API key stored</li>
+            <li>Customer-owned AI access</li>
           </ul>
         </div>
 
-        <div className="product-frame" aria-label="Codex Home Bridge app preview">
+        <div className="product-frame" aria-label="Set It Up app preview">
           <div className="frame-head">
             <div>
-              <p>LIVE BUILD · 0.2</p>
-              <strong>PHONE GATE ACTIVE</strong>
+              <p>WORKING BUILD · 0.4</p>
+              <strong>LOCAL AI · OPENAI · CODEX</strong>
             </div>
             <span className="live-dot" aria-hidden="true" />
           </div>
           <img
-            src="/bridge-app.png"
-            alt="Codex Home Bridge macOS app showing an enrolled phone present on the local network"
+            src="/set-it-up-app.jpg"
+            alt="Set It Up macOS app showing the local AI, OpenAI, and Codex modes"
           />
           <p className="frame-note">
-            Real build. Real phone heartbeat. Test pairing code already rotated.
+            Real macOS build. Mac owner verified. Local AI shown without a
+            cloud account.
           </p>
         </div>
       </section>
 
       <section className="trust-strip" aria-label="Product principles">
         <div className="shell trust-grid">
-          <p>Runs through your existing Codex sign-in</p>
-          <p>Apple Speech, with on-device recognition when available</p>
-          <p>HomePod audio through macOS AirPlay output</p>
+          <p>Local AI stays on the Mac when Ollama does</p>
+          <p>OpenAI keys live in macOS Keychain</p>
+          <p>Codex actions begin read-only</p>
         </div>
       </section>
 
       <section className="section shell" id="how">
         <div className="section-heading">
-          <p className="eyebrow">THE HONEST ARCHITECTURE</p>
-          <h2>A useful bridge, built around what Apple actually exposes.</h2>
+          <p className="eyebrow">ONE PRACTICAL SESSION</p>
+          <h2>We make the first useful request work.</h2>
           <p>
-            HomePod microphones are not available to ordinary Mac apps. The
-            bridge uses the Mac microphone for input and your selected HomePod
-            for spoken output.
+            No mystery bundle and no fake universal assistant. We choose the
+            right mode for the customer’s Mac, finish the setup, and explain
+            exactly what it can and cannot do.
           </p>
         </div>
-
         <ol className="steps">
           <li>
             <span>01</span>
-            <h3>Say it</h3>
-            <p>“Hey Codex” wakes the listener and captures your request.</p>
+            <h3>Choose a mode</h3>
+            <p>Private local chat, customer-owned OpenAI API, or Codex tasks.</p>
           </li>
           <li>
             <span>02</span>
-            <h3>Mac hears</h3>
-            <p>Apple Speech transcribes locally when the system supports it.</p>
+            <h3>Install the app</h3>
+            <p>Build, permissions, microphone, model or account, and launch.</p>
           </li>
           <li>
             <span>03</span>
-            <h3>Codex acts</h3>
-            <p>Your signed-in Codex CLI works inside the permission you choose.</p>
+            <h3>Secure the Mac</h3>
+            <p>Owner authentication, Keychain storage, and safe defaults.</p>
           </li>
           <li>
             <span>04</span>
-            <h3>HomePod answers</h3>
-            <p>macOS speaks the concise response through your current output.</p>
+            <h3>Prove it live</h3>
+            <p>A typed request and “Set It Up” voice request before handoff.</p>
           </li>
         </ol>
+      </section>
+
+      <section className="section shell" id="modes">
+        <div className="section-heading compact">
+          <p className="eyebrow">THREE HONEST MODES</p>
+          <h2>Start private. Connect more power when it earns its place.</h2>
+        </div>
+        <div className="comparison-grid mode-grid">
+          <article>
+            <span className="article-index">LOCAL</span>
+            <h3>Private AI on the Mac</h3>
+            <p>
+              Ollama runs the model locally. Best for chat, drafting, and
+              private everyday questions. Model download and performance
+              depend on the customer’s Mac.
+            </p>
+          </article>
+          <article>
+            <span className="article-index">OPENAI</span>
+            <h3>Cloud AI with your key</h3>
+            <p>
+              The customer supplies an OpenAI API key and model. The key is
+              saved in Keychain. API usage is billed separately by OpenAI.
+            </p>
+          </article>
+          <article>
+            <span className="article-index">CODEX</span>
+            <h3>Bigger computer tasks</h3>
+            <p>
+              A signed-in Codex installation can inspect or edit a selected
+              workspace. Read-only is the default; workspace write is explicit.
+            </p>
+          </article>
+        </div>
       </section>
 
       <section className="security-section" id="security">
         <div className="shell security-grid">
           <div className="security-copy">
-            <p className="eyebrow">PRESENCE, NOT GUESSWORK</p>
-            <h2>Your iPhone is the key.</h2>
+            <p className="eyebrow">SECURITY THAT MATCHES THE CLAIM</p>
+            <h2>The owner unlocks it. The selected mode sets the boundary.</h2>
             <p>
-              The Mac hosts a tiny local pairing page. Your iPhone enters a
-              rotating six-digit code and sends a heartbeat while both devices
-              are on the same network.
+              The app locks when the Mac session becomes inactive. It receives
+              no fingerprint data, stores no audio recordings, and does not
+              expose unrestricted system access.
             </p>
           </div>
-
           <div className="security-specs">
             <div>
-              <span>18 sec</span>
-              <p>Listener lockout after the heartbeat disappears</p>
+              <span>LOCAL</span>
+              <p>Loopback-only endpoint for local AI mode</p>
             </div>
             <div>
-              <span>7 / 30 days</span>
-              <p>User-selectable pairing credential rotation</p>
+              <span>KEYCHAIN</span>
+              <p>Device-only storage for the OpenAI API key</p>
             </div>
             <div>
-              <span>5 tries</span>
-              <p>Rate limit before a one-minute pairing cooldown</p>
+              <span>READ</span>
+              <p>Default Codex permission for workspace inspection</p>
             </div>
             <div>
-              <span>0 scans</span>
-              <p>No blind sweep that guesses which Wi-Fi device is yours</p>
+              <span>LOCK</span>
+              <p>Fresh Mac owner check after session unlock</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section shell comparison">
-        <div className="section-heading compact">
-          <p className="eyebrow">BUILT FOR CONTROL</p>
-          <h2>Open source by default. Permissioned by design.</h2>
+      <section className="section shell partner-section" id="partners">
+        <div className="section-heading">
+          <p className="eyebrow">INSTALL PARTNERS</p>
+          <h2>A simple $50 add-on for gadget and computer shops.</h2>
+          <p>
+            Partners can offer a finished AI setup when a customer buys,
+            repairs, or upgrades a Mac. The software stays free; the charge is
+            for the guided installation and working handoff.
+          </p>
         </div>
-        <div className="comparison-grid">
-          <article>
-            <span className="article-index">A</span>
-            <h3>Read only starts safe</h3>
-            <p>
-              Ask questions and inspect a workspace without giving Codex write
-              access. Switch to workspace write only when the task needs it.
-            </p>
-          </article>
-          <article>
-            <span className="article-index">B</span>
-            <h3>No dangerous mode exposed</h3>
-            <p>
-              The bridge intentionally does not offer unrestricted system
-              access. Important changes still deserve review.
-            </p>
-          </article>
-          <article>
-            <span className="article-index">C</span>
-            <h3>Inspect every line</h3>
-            <p>
-              The macOS app, pairing server, wake-phrase parser, tests, and
-              launch site are available under the MIT license.
-            </p>
-          </article>
+        <div className="partner-grid">
+          <div>
+            <strong>$50 CAD</strong>
+            <span>one-time customer install</span>
+          </div>
+          <div>
+            <strong>1 path</strong>
+            <span>local AI, OpenAI API, or Codex</span>
+          </div>
+          <div>
+            <strong>Live proof</strong>
+            <span>first working voice and typed request</span>
+          </div>
+          <div>
+            <strong>Open source</strong>
+            <span>customer keeps the app and source</span>
+          </div>
         </div>
+        <p className="partner-note">
+          Retail partner terms and any revenue share are agreed before the
+          offer is listed. The $50 fee does not include model downloads,
+          third-party subscriptions, API usage, or hardware.
+        </p>
       </section>
 
-      <section className="setup-section" id="setup">
+      <section className="setup-section" id="install">
         <div className="shell setup-grid">
           <div>
-            <p className="eyebrow">FOUNDING SETUP</p>
-            <h2>Software free. Guided install $99.</h2>
+            <p className="eyebrow">GUIDED INSTALL</p>
+            <h2>Free software. $50 to set it up properly.</h2>
             <p className="setup-lede">
-              For the first 50 Mac users who want the bridge configured,
-              secured, and working with their own HomePod.
+              One Mac, one assistant path, owner authentication, audio setup,
+              and one proven request. If the chosen service needs an account or
+              paid usage, the customer owns and pays for it directly.
             </p>
           </div>
           <div className="offer">
-            <p className="offer-label">ONE-TIME REMOTE SETUP</p>
+            <p className="offer-label">ONE-TIME MAC INSTALL</p>
             <div className="price">
-              <span>$99</span>
+              <span>$50</span>
               <small>CAD</small>
             </div>
             <ul>
-              <li>Build and local installation</li>
-              <li>iPhone presence gate pairing</li>
-              <li>HomePod output setup</li>
-              <li>First live “Hey Codex” task</li>
+              <li>Set It Up installation</li>
+              <li>One AI mode configured</li>
+              <li>Mac owner authentication</li>
+              <li>Voice, typed request, and audio check</li>
+              <li>Removal and switching handoff</li>
             </ul>
             <button className="button button-primary checkout-pending" disabled>
               Checkout link is being connected
             </button>
             <p className="offer-note">
-              You keep the source and can remove the app at any time.
+              We are at the Stripe setup step. No payment link is public yet.
             </p>
           </div>
         </div>
@@ -213,19 +249,14 @@ export default function Home() {
 
       <footer className="footer shell">
         <div className="brand">
-          <span className="brand-mark">C</span>
-          <span>CODEX HOME BRIDGE</span>
+          <span className="brand-mark">S</span>
+          <span>SET IT UP</span>
         </div>
         <p>
-          Unofficial software. Not affiliated with or endorsed by OpenAI or
-          Apple. Codex, HomePod, macOS, and iPhone are trademarks of their
-          respective owners.
+          Unofficial software. Not affiliated with or endorsed by OpenAI,
+          Apple, or Ollama. Product names belong to their respective owners.
         </p>
-        <a
-          href="https://github.com/theprincesajjad/codex-home-bridge"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a href={sourceUrl} target="_blank" rel="noreferrer">
           GitHub ↗
         </a>
       </footer>

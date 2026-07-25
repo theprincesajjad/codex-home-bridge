@@ -3,7 +3,14 @@ import Foundation
 public struct WakePhraseParser: Sendable {
     public let wakePhrases: [String]
 
-    public init(wakePhrases: [String] = ["hey codex", "okay codex", "codex"]) {
+    public init(
+        wakePhrases: [String] = [
+            "hey set it up",
+            "set it up",
+            "hey codex",
+            "okay codex",
+        ]
+    ) {
         self.wakePhrases = wakePhrases
     }
 

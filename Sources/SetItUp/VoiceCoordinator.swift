@@ -4,13 +4,13 @@ import Combine
 import Foundation
 import Speech
 import SwiftUI
-import CodexHomeBridgeCore
+import SetItUpCore
 
 @MainActor
 final class VoiceCoordinator: NSObject, ObservableObject {
     enum State: Equatable {
         case off
-        case phoneLocked
+        case authenticationLocked
         case requestingAccess
         case listening
         case processing
@@ -21,14 +21,14 @@ final class VoiceCoordinator: NSObject, ObservableObject {
             switch self {
             case .off:
                 return "Off"
-            case .phoneLocked:
-                return "Locked until your iPhone is present"
+            case .authenticationLocked:
+                return "Locked — Touch ID required"
             case .requestingAccess:
                 return "Requesting access"
             case .listening:
-                return "Listening for “Hey Codex”"
+                return "Listening for “Set It Up”"
             case .processing:
-                return "Codex is working"
+                return "Assistant is working"
             case .speaking:
                 return "Speaking"
             case let .error(message):
@@ -40,8 +40,8 @@ final class VoiceCoordinator: NSObject, ObservableObject {
             switch self {
             case .off:
                 return "pause.circle"
-            case .phoneLocked:
-                return "iphone.slash"
+            case .authenticationLocked:
+                return "touchid"
             case .requestingAccess:
                 return "lock.shield"
             case .listening:
@@ -61,8 +61,36 @@ final class VoiceCoordinator: NSObject, ObservableObject {
     @Published private(set) var lastResponse = ""
     @Published var workspace = "~/Documents/Codex"
     @Published var sandbox: BridgeSandbox = .readOnly
+    @Published var provider: AssistantProvider = .localAI {
+        didSet {
+            UserDefaults.standard.set(provider.rawValue, forKey: "assistantProvider")
+            providerStatus = ""
+        }
+    }
+    @Published var localEndpoint = "http://127.0.0.1:11434" {
+        didSet {
+            UserDefaults.standard.set(localEndpoint, forKey: "localAIEndpoint")
+            providerStatus = ""
+        }
+    }
+    @Published var localModel = "" {
+        didSet {
+            UserDefaults.standard.set(localModel, forKey: "localAIModel")
+            providerStatus = ""
+        }
+    }
+    @Published var openAIModel = "" {
+        didSet {
+            UserDefaults.standard.set(openAIModel, forKey: "openAIModel")
+            providerStatus = ""
+        }
+    }
+    @Published var openAIKeyDraft = ""
+    @Published private(set) var providerStatus = ""
+    @Published private(set) var isCheckingProvider = false
+    @Published private(set) var hasSavedOpenAIKey = KeychainStore.hasOpenAIKey
 
-    let phoneGate: PhonePresenceGate
+    let authenticationGate: MacAuthenticationGate
 
     private let parser = WakePhraseParser()
     private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-CA"))
@@ -72,21 +100,37 @@ final class VoiceCoordinator: NSObject, ObservableObject {
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private var commandDebounce: Task<Void, Never>?
+    private var commandTask: Task<Void, Never>?
     private var sessionReset: Task<Void, Never>?
     private var tapInstalled = false
-    private var wantsListening = false
+    private var wantsListening = true
     private var lastSubmittedTranscript = ""
-    private var presenceCancellable: AnyCancellable?
+    private var authenticationCancellable: AnyCancellable?
+    private var providerCheckTask: Task<Void, Never>?
 
-    init(phoneGate: PhonePresenceGate) {
-        self.phoneGate = phoneGate
+    init(authenticationGate: MacAuthenticationGate) {
+        self.authenticationGate = authenticationGate
+        let defaults = UserDefaults.standard
+        if let savedProvider = defaults.string(forKey: "assistantProvider"),
+           let provider = AssistantProvider(rawValue: savedProvider) {
+            self.provider = provider
+        }
+        if let savedEndpoint = defaults.string(forKey: "localAIEndpoint") {
+            self.localEndpoint = savedEndpoint
+        }
+        if let savedModel = defaults.string(forKey: "localAIModel") {
+            self.localModel = savedModel
+        }
+        if let savedModel = defaults.string(forKey: "openAIModel") {
+            self.openAIModel = savedModel
+        }
         super.init()
         synthesizer.delegate = self
-        presenceCancellable = phoneGate.$isPhonePresent
+        authenticationCancellable = authenticationGate.$isUnlocked
             .removeDuplicates()
-            .sink { [weak self] isPresent in
+            .sink { [weak self] isUnlocked in
                 Task { @MainActor [weak self] in
-                    self?.phonePresenceChanged(isPresent)
+                    self?.authenticationChanged(isUnlocked)
                 }
             }
     }
@@ -101,9 +145,10 @@ final class VoiceCoordinator: NSObject, ObservableObject {
 
     func requestAccessAndStart() {
         wantsListening = true
-        guard phoneGate.isPhonePresent else {
+        guard authenticationGate.isUnlocked else {
             stopRecognition()
-            state = .phoneLocked
+            state = .authenticationLocked
+            authenticationGate.requestUnlock()
             return
         }
         state = .requestingAccess
@@ -147,11 +192,67 @@ final class VoiceCoordinator: NSObject, ObservableObject {
         NSPasteboard.general.setString(lastResponse, forType: .string)
     }
 
+    func saveOpenAIKey() {
+        do {
+            try KeychainStore.saveOpenAIKey(openAIKeyDraft)
+            openAIKeyDraft = ""
+            hasSavedOpenAIKey = KeychainStore.hasOpenAIKey
+            providerStatus = hasSavedOpenAIKey
+                ? "API key saved in this Mac’s Keychain"
+                : "API key removed"
+        } catch {
+            providerStatus = error.localizedDescription
+        }
+    }
+
+    func removeOpenAIKey() {
+        do {
+            try KeychainStore.deleteOpenAIKey()
+            openAIKeyDraft = ""
+            hasSavedOpenAIKey = false
+            providerStatus = "API key removed"
+        } catch {
+            providerStatus = error.localizedDescription
+        }
+    }
+
+    func checkSelectedProvider() {
+        providerCheckTask?.cancel()
+        isCheckingProvider = true
+        providerStatus = "Checking \(provider.label)…"
+        let selectedProvider = provider
+        let endpoint = localEndpoint
+
+        providerCheckTask = Task { [weak self] in
+            let status: String
+            switch selectedProvider {
+            case .localAI:
+                let available = await LocalAIRunner.check(endpoint: endpoint)
+                status = available
+                    ? "Ollama is responding on this Mac"
+                    : "Ollama is not running on this Mac yet"
+            case .openAI:
+                status = KeychainStore.hasOpenAIKey
+                    ? "API key is saved; the first request will verify access"
+                    : "Save an OpenAI API key first"
+            case .codex:
+                status = CodexRunner.executableURL() == nil
+                    ? "Codex is not installed on this Mac"
+                    : "Codex is installed; sign-in is checked on the first request"
+            }
+
+            guard !Task.isCancelled else { return }
+            self?.providerStatus = status
+            self?.isCheckingProvider = false
+        }
+    }
+
     func runTypedCommand(_ command: String) {
         let trimmed = command.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        guard phoneGate.isPhonePresent else {
-            state = .phoneLocked
+        guard authenticationGate.isUnlocked else {
+            state = .authenticationLocked
+            authenticationGate.requestUnlock()
             return
         }
         submit(trimmed)
@@ -159,9 +260,9 @@ final class VoiceCoordinator: NSObject, ObservableObject {
 
     private func startRecognition() {
         guard wantsListening else { return }
-        guard phoneGate.isPhonePresent else {
+        guard authenticationGate.isUnlocked else {
             stopRecognition()
-            state = .phoneLocked
+            state = .authenticationLocked
             return
         }
         guard state != .processing && state != .speaking else { return }
@@ -250,8 +351,9 @@ final class VoiceCoordinator: NSObject, ObservableObject {
     }
 
     private func submit(_ command: String) {
-        guard phoneGate.isPhonePresent else {
-            state = .phoneLocked
+        guard authenticationGate.isUnlocked else {
+            state = .authenticationLocked
+            authenticationGate.requestUnlock()
             return
         }
         guard state != .processing && state != .speaking else { return }
@@ -262,19 +364,36 @@ final class VoiceCoordinator: NSObject, ObservableObject {
 
         let workspace = self.workspace
         let sandbox = self.sandbox
+        let provider = self.provider
+        let localEndpoint = self.localEndpoint
+        let localModel = self.localModel
+        let openAIModel = self.openAIModel
 
-        Task { [weak self] in
+        commandTask?.cancel()
+        commandTask = Task { [weak self] in
             do {
-                let response = try await CodexRunner.run(
-                    spokenRequest: command,
+                let response = try await AssistantRunner.run(
+                    request: command,
+                    provider: provider,
+                    localEndpoint: localEndpoint,
+                    localModel: localModel,
+                    openAIModel: openAIModel,
                     workspace: workspace,
                     sandbox: sandbox
                 )
-                guard let self else { return }
+                guard let self,
+                      !Task.isCancelled,
+                      self.authenticationGate.isUnlocked else {
+                    return
+                }
                 self.lastResponse = response
                 self.speak(response)
             } catch {
-                guard let self else { return }
+                guard let self,
+                      !Task.isCancelled,
+                      self.authenticationGate.isUnlocked else {
+                    return
+                }
                 self.lastResponse = error.localizedDescription
                 self.speak(error.localizedDescription)
             }
@@ -291,9 +410,9 @@ final class VoiceCoordinator: NSObject, ObservableObject {
 
     private func restartRecognition() {
         guard wantsListening else { return }
-        guard phoneGate.isPhonePresent else {
+        guard authenticationGate.isUnlocked else {
             stopRecognition()
-            state = .phoneLocked
+            state = .authenticationLocked
             return
         }
         guard state != .processing && state != .speaking else { return }
@@ -329,11 +448,13 @@ final class VoiceCoordinator: NSObject, ObservableObject {
         }
     }
 
-    private func phonePresenceChanged(_ isPresent: Bool) {
-        if !isPresent {
+    private func authenticationChanged(_ isUnlocked: Bool) {
+        if !isUnlocked {
             stopRecognition()
+            commandTask?.cancel()
+            synthesizer.stopSpeaking(at: .immediate)
             if wantsListening {
-                state = .phoneLocked
+                state = .authenticationLocked
             }
             return
         }
@@ -351,10 +472,10 @@ extension VoiceCoordinator: AVSpeechSynthesizerDelegate {
     ) {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            if self.wantsListening, self.phoneGate.isPhonePresent {
+            if self.wantsListening, self.authenticationGate.isUnlocked {
                 self.startRecognition()
             } else if self.wantsListening {
-                self.state = .phoneLocked
+                self.state = .authenticationLocked
             } else {
                 self.state = .off
             }
@@ -367,9 +488,9 @@ extension VoiceCoordinator: AVSpeechSynthesizerDelegate {
     ) {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            self.state = self.wantsListening && self.phoneGate.isPhonePresent
+            self.state = self.wantsListening && self.authenticationGate.isUnlocked
                 ? .listening
-                : (self.wantsListening ? .phoneLocked : .off)
+                : (self.wantsListening ? .authenticationLocked : .off)
             self.restartRecognition()
         }
     }
