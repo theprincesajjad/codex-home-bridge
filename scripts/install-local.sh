@@ -12,5 +12,7 @@ fi
 
 mkdir -p "$install_root"
 ditto "$source_app" "$installed_app"
+xattr -cr "$installed_app"
+codesign --verify --deep --strict "$installed_app"
 open "$installed_app"
 echo "$installed_app"
